@@ -14,6 +14,6 @@ scrollable content, and a draggable element.
 ```sh
 ato init .
 ato stop .
-ato encap main --output generic-dom.capsule
+ato encap .@main --materialize ato.replay@1 --output generic-dom.capsule
 ato run generic-dom.capsule
 ```
