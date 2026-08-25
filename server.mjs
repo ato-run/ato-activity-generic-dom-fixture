@@ -14,9 +14,10 @@ const page = `<!doctype html>
     <style>
       :root { font-family: system-ui, sans-serif; color-scheme: light; }
       body { margin: 0; background: #f5f2e9; color: #17211b; }
-      main { max-width: 760px; margin: 0 auto; padding: 32px; }
-      h1 { margin: 0 0 8px; font-size: 28px; }
-      .card { margin-top: 20px; padding: 20px; border: 2px solid #17211b; border-radius: 16px; background: #fffdf6; box-shadow: 6px 6px 0 #17211b; }
+      main { max-width: 760px; margin: 0 auto; padding: 16px 24px 32px; }
+      h1 { margin: 0 0 4px; font-size: 26px; }
+      main > p { margin: 4px 0 10px; }
+      .card { margin-top: 12px; padding: 14px; border: 2px solid #17211b; border-radius: 16px; background: #fffdf6; box-shadow: 4px 4px 0 #17211b; }
       button, input { font: inherit; }
       button { padding: 10px 16px; border: 2px solid #17211b; border-radius: 999px; background: #f2c94c; cursor: pointer; }
       input { width: min(100%, 360px); padding: 10px 12px; border: 2px solid #17211b; border-radius: 10px; }
@@ -25,19 +26,19 @@ const page = `<!doctype html>
       .scroll-content { height: 420px; background: linear-gradient(#d7f5de, #9cc7ff); }
       .drag-stage { position: relative; height: 130px; border: 2px dashed #17211b; border-radius: 10px; touch-action: none; }
       .drag-box { position: absolute; left: 16px; top: 28px; width: 72px; height: 72px; display: grid; place-items: center; border: 2px solid #17211b; border-radius: 12px; background: #e8a8ff; user-select: none; }
-      output { display: block; margin-top: 10px; font-family: ui-monospace, monospace; }
+      output { display: block; margin-top: 6px; font-family: ui-monospace, monospace; }
       .archetypes { display: grid; gap: 18px; }
       .archetype { position: relative; overflow: hidden; }
       .eyebrow { font: 700 11px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: #516b5b; }
-      .game-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 340px; margin: 18px 0; padding: 10px; border-radius: 14px; background: #bbada0; }
+      .game-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width: 220px; margin: 10px 0; padding: 8px; border-radius: 12px; background: #bbada0; }
       .tile { display: grid; aspect-ratio: 1; place-items: center; border-radius: 8px; background: #cdc1b4; font-size: clamp(16px, 4vw, 28px); font-weight: 850; }
       .tile.hot { color: #f9f6f2; background: #edc53f; }
       .tile.won { color: #f9f6f2; background: #edc22e; box-shadow: 0 0 0 4px rgba(237,194,46,.25); }
-      .pixel-grid { display: grid; grid-template-columns: repeat(8, 28px); width: fit-content; margin: 18px 0; border: 4px solid #17211b; background: #fff; }
-      .pixel { width: 28px; height: 28px; padding: 0; border: 1px solid rgba(23,33,27,.12); border-radius: 0; background: #f4efe5; }
+      .pixel-grid { display: grid; grid-template-columns: repeat(8, 24px); width: fit-content; margin: 10px 0; border: 4px solid #17211b; background: #fff; }
+      .pixel { width: 24px; height: 24px; padding: 0; border: 1px solid rgba(23,33,27,.12); border-radius: 0; background: #f4efe5; }
       .pixel.done { background: #ff7455; }
       .pixel.seed { background: #17211b; }
-      .test-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 0; padding: 14px; border: 2px solid #17211b; border-radius: 10px; font-family: ui-monospace, monospace; }
+      .test-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 10px 0; padding: 10px; border: 2px solid #17211b; border-radius: 10px; font-family: ui-monospace, monospace; }
       .test-state { color: #b42318; font-weight: 850; }
       .test-line.fixed .test-state { color: #18794e; }
     </style>
