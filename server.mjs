@@ -43,7 +43,7 @@ const page = `<!doctype html>
       .test-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 10px 0; padding: 10px; border: 2px solid #17211b; border-radius: 10px; font-family: ui-monospace, monospace; }
       .test-state { color: #b42318; font-weight: 850; }
       .test-line.fixed .test-state { color: #18794e; }
-      @media (max-width: 820px) {
+      @media (max-width: 520px) {
         .archetypes { grid-template-columns: 1fr; }
         .archetype p { min-height: 0; }
       }
