@@ -4,7 +4,6 @@ schema = 1
 id = "app"
 command = ["node", "server.mjs"]
 cwd = "."
-capture = "adapter_mediated"
 
 [[adapter]]
 target = "app"
