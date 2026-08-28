@@ -55,10 +55,12 @@ export const page = `<!doctype html>
       </section>
     </main>
     <script type="module">
+      /* ato-external-bridge:start */
       import {
         BrowserDomOperationAdapter,
         createAtoBrowserBridge,
       } from "/__ato/browser-runner-bridge-v0.1.2.js";
+      /* ato-external-bridge:end */
 
       const counter = document.querySelector('[data-counter]');
       const lastEvent = document.querySelector('#last-event');
@@ -100,6 +102,7 @@ export const page = `<!doctype html>
       stage.addEventListener('pointerup', () => { dragging = false; lastEvent.textContent = 'pointerup'; });
       stage.addEventListener('pointercancel', () => { dragging = false; lastEvent.textContent = 'pointercancel'; });
 
+      /* ato-external-bridge:start */
       const launchIdentity = new URLSearchParams(location.hash.replace(/^#/, ''));
       if (launchIdentity.has('parent_origin')) {
         const dom = new BrowserDomOperationAdapter();
@@ -133,9 +136,15 @@ export const page = `<!doctype html>
         });
         window.addEventListener('pagehide', () => bridge.dispose(), { once: true });
       }
+      /* ato-external-bridge:end */
     </script>
   </body>
 </html>`;
+
+export const pageWithoutBrowserBridge = page.replace(
+  /\s*\/\* ato-external-bridge:start \*\/[\s\S]*?\/\* ato-external-bridge:end \*\//gu,
+  "",
+);
 
 function send(response, status, contentType, body) {
   response.writeHead(status, {
