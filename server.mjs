@@ -7,7 +7,7 @@ const separator = listen.lastIndexOf(":");
 const host = listen.slice(0, separator);
 const port = Number.parseInt(listen.slice(separator + 1), 10);
 export const browserRunnerBridge = readFileSync(
-  new URL("./browser-runner-bridge-v0.1.0.js", import.meta.url),
+  new URL("./browser-runner-bridge-v0.1.1.js", import.meta.url),
 );
 
 export const page = `<!doctype html>
@@ -58,7 +58,7 @@ export const page = `<!doctype html>
       import {
         BrowserDomOperationAdapter,
         createAtoBrowserBridge,
-      } from "/__ato/browser-runner-bridge-v0.1.0.js";
+      } from "/__ato/browser-runner-bridge-v0.1.1.js";
 
       const counter = document.querySelector('[data-counter]');
       const lastEvent = document.querySelector('#last-event');
@@ -143,7 +143,7 @@ export const server = http.createServer((request, response) => {
     send(response, 200, "application/json", JSON.stringify({ status: "ok" }));
     return;
   }
-  if (request.url === "/__ato/browser-runner-bridge-v0.1.0.js") {
+  if (request.url === "/__ato/browser-runner-bridge-v0.1.1.js") {
     send(response, 200, "text/javascript; charset=utf-8", browserRunnerBridge);
     return;
   }

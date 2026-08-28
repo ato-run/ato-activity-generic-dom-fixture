@@ -7,6 +7,6 @@ await rm("dist", { force: true, recursive: true });
 await mkdir("dist/__ato", { recursive: true });
 await writeFile("dist/index.html", page);
 await writeFile(
-  "dist/__ato/browser-runner-bridge-v0.1.0.js",
+  "dist/__ato/browser-runner-bridge-v0.1.1.js",
   browserRunnerBridge,
 );
