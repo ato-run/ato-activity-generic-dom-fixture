@@ -75,15 +75,15 @@ export const page = `<!doctype html>
       document.querySelector('#text-input').addEventListener('keydown', (event) => {
         if (event.code === 'Enter' || event.code === 'ArrowRight') increment('key:' + event.code);
       });
-      window.addEventListener('keydown', (event) => {
+      document.addEventListener('keydown', (event) => {
         if (event.repeat) return;
-        if (event.code === 'KeyX') {
+        if (event.code === 'KeyX' || event.key.toLowerCase() === 'x') {
           increment('semantic:+1');
-        } else if (event.code === 'KeyZ') {
+        } else if (event.code === 'KeyZ' || event.key.toLowerCase() === 'z') {
           counter.textContent = String(Number(counter.textContent) - 1);
           lastEvent.textContent = 'semantic:-1';
         }
-      });
+      }, { capture: true });
 
       const stage = document.querySelector('#drag-stage');
       const box = document.querySelector('#drag-box');
