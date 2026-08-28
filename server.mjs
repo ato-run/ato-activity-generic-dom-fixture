@@ -1,11 +1,16 @@
 import http from "node:http";
+import { readFileSync } from "node:fs";
+import { pathToFileURL } from "node:url";
 
 const listen = process.env.APP_LISTEN ?? "127.0.0.1:38182";
 const separator = listen.lastIndexOf(":");
 const host = listen.slice(0, separator);
 const port = Number.parseInt(listen.slice(separator + 1), 10);
+export const browserRunnerBridge = readFileSync(
+  new URL("./browser-runner-bridge-v0.1.0.js", import.meta.url),
+);
 
-const page = `<!doctype html>
+export const page = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -36,6 +41,7 @@ const page = `<!doctype html>
         <button id="increment" type="button">Increment</button>
         <span data-counter>0</span>
         <output id="last-event">ready</output>
+        <output id="browser-runner-state">revision=0 · last_actor=none</output>
       </section>
       <section class="card">
         <label for="text-input">Keyboard input</label><br>
@@ -48,9 +54,17 @@ const page = `<!doctype html>
         <div class="drag-stage" id="drag-stage"><div class="drag-box" id="drag-box">Drag</div></div>
       </section>
     </main>
-    <script>
+    <script type="module">
+      import {
+        BrowserDomOperationAdapter,
+        createAtoBrowserBridge,
+      } from "/__ato/browser-runner-bridge-v0.1.0.js";
+
       const counter = document.querySelector('[data-counter]');
       const lastEvent = document.querySelector('#last-event');
+      const browserRunnerState = document.querySelector('#browser-runner-state');
+      let browserRevision = 0;
+      let lastBrowserActor = null;
       const increment = (source) => {
         counter.textContent = String(Number(counter.textContent) + 1);
         lastEvent.textContent = source;
@@ -76,6 +90,40 @@ const page = `<!doctype html>
       });
       stage.addEventListener('pointerup', () => { dragging = false; lastEvent.textContent = 'pointerup'; });
       stage.addEventListener('pointercancel', () => { dragging = false; lastEvent.textContent = 'pointercancel'; });
+
+      const launchIdentity = new URLSearchParams(location.hash.replace(/^#/, ''));
+      if (launchIdentity.has('parent_origin')) {
+        const dom = new BrowserDomOperationAdapter();
+        const bridge = createAtoBrowserBridge({
+          allowedControllerOrigins: [
+            'https://ato.run',
+            'https://stg-app.ato.run',
+            'http://127.0.0.1:4321',
+            'http://localhost:4321',
+          ],
+          allowedCapabilityVerifierOrigins: [
+            'https://api.ato.run',
+            'https://staging.api.ato.run',
+            'http://127.0.0.1:8787',
+            'http://localhost:8787',
+          ],
+          applyOperation: (operation, authority) => {
+            dom.apply(operation);
+            browserRevision += 1;
+            lastBrowserActor = authority.actor_id;
+            browserRunnerState.textContent = 'revision=' + browserRevision + ' · last_actor=' + lastBrowserActor;
+          },
+          stateProvider: () => ({
+            revision: browserRevision,
+            summary: {
+              value: Number(counter.textContent),
+              revision: browserRevision,
+              last_actor: lastBrowserActor,
+            },
+          }),
+        });
+        window.addEventListener('pagehide', () => bridge.dispose(), { once: true });
+      }
     </script>
   </body>
 </html>`;
@@ -90,9 +138,13 @@ function send(response, status, contentType, body) {
   response.end(body);
 }
 
-const server = http.createServer((request, response) => {
+export const server = http.createServer((request, response) => {
   if (request.url === "/ready") {
     send(response, 200, "application/json", JSON.stringify({ status: "ok" }));
+    return;
+  }
+  if (request.url === "/__ato/browser-runner-bridge-v0.1.0.js") {
+    send(response, 200, "text/javascript; charset=utf-8", browserRunnerBridge);
     return;
   }
   if (request.url !== "/") {
@@ -102,8 +154,12 @@ const server = http.createServer((request, response) => {
   send(response, 200, "text/html; charset=utf-8", page);
 });
 
-server.listen(port, host);
-
-for (const signal of ["SIGINT", "SIGTERM"]) {
-  process.on(signal, () => server.close(() => process.exit(0)));
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  server.listen(port, host);
+  for (const signal of ["SIGINT", "SIGTERM"]) {
+    process.on(signal, () => server.close(() => process.exit(0)));
+  }
 }

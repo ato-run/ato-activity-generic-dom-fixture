@@ -9,6 +9,26 @@ The application intentionally contains no Activity, Experience, game, or
 Tobu-specific protocol. Its DOM includes a click counter, keyboard input,
 scrollable content, and a draggable element.
 
+## Browser Runner Bridge v0 fixture
+
+This repository is also the cooperative external-site reference integration.
+It serves the version-pinned `browser-runner-bridge-v0.1.0.js` artifact from
+its own origin, opts in with explicit Controller/API origin allowlists, and
+registers a small state projection for the counter. The Bridge binds Actor
+authority from the attached connection; the DOM operation payload cannot pick
+an Actor.
+
+The checked-in bridge artifact must be byte-identical to the PWA release
+artifact and the static materializer asset. Current SHA-256:
+
+`a99e17d048093c75816bc5d035cc5215524cd7a9ed3388bdcc54dab6d5c8f944`
+
+Generate a static external-origin deployment directory with:
+
+```sh
+node build-site.mjs
+```
+
 ## Verify
 
 ```sh
