@@ -21,7 +21,7 @@ an Actor.
 The checked-in bridge artifact must be byte-identical to the PWA release
 artifact and the static materializer asset. Current SHA-256:
 
-`a99e17d048093c75816bc5d035cc5215524cd7a9ed3388bdcc54dab6d5c8f944`
+`5050543d061cd857fa7acf0574cb03b9205a3311dfb8daf6afe2192ab61453b3`
 
 Generate a static external-origin deployment directory with:
 
