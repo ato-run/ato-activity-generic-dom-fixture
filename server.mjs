@@ -7,7 +7,7 @@ const separator = listen.lastIndexOf(":");
 const host = listen.slice(0, separator);
 const port = Number.parseInt(listen.slice(separator + 1), 10);
 export const browserRunnerBridge = readFileSync(
-  new URL("./browser-runner-bridge-v0.1.1.js", import.meta.url),
+  new URL("./browser-runner-bridge-v0.1.2.js", import.meta.url),
 );
 
 export const page = `<!doctype html>
@@ -58,7 +58,7 @@ export const page = `<!doctype html>
       import {
         BrowserDomOperationAdapter,
         createAtoBrowserBridge,
-      } from "/__ato/browser-runner-bridge-v0.1.1.js";
+      } from "/__ato/browser-runner-bridge-v0.1.2.js";
 
       const counter = document.querySelector('[data-counter]');
       const lastEvent = document.querySelector('#last-event');
@@ -72,6 +72,15 @@ export const page = `<!doctype html>
       document.querySelector('#increment').addEventListener('click', () => increment('click'));
       document.querySelector('#text-input').addEventListener('keydown', (event) => {
         if (event.code === 'Enter' || event.code === 'ArrowRight') increment('key:' + event.code);
+      });
+      window.addEventListener('keydown', (event) => {
+        if (event.repeat) return;
+        if (event.code === 'KeyX') {
+          increment('semantic:+1');
+        } else if (event.code === 'KeyZ') {
+          counter.textContent = String(Number(counter.textContent) - 1);
+          lastEvent.textContent = 'semantic:-1';
+        }
       });
 
       const stage = document.querySelector('#drag-stage');
@@ -143,7 +152,7 @@ export const server = http.createServer((request, response) => {
     send(response, 200, "application/json", JSON.stringify({ status: "ok" }));
     return;
   }
-  if (request.url === "/__ato/browser-runner-bridge-v0.1.1.js") {
+  if (request.url === "/__ato/browser-runner-bridge-v0.1.2.js") {
     send(response, 200, "text/javascript; charset=utf-8", browserRunnerBridge);
     return;
   }
